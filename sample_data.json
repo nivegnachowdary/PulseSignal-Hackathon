@@ -1,0 +1,50 @@
+[
+  {
+    "id": "job_001",
+    "company": "Anthropic",
+    "source_url": "https://anthropic.com/careers/1",
+    "raw_text": "We are seeking a Senior LLM Inference Engineer to join our core model team. You will be responsible for optimizing model serving latency using CUDA and writing high-performance C++ code. Experience with massive scale inference is required. We are expanding this team rapidly this quarter."
+  },
+  {
+    "id": "job_002",
+    "company": "Anthropic",
+    "source_url": "https://anthropic.com/careers/2",
+    "raw_text": "Machine Learning Engineer, Alignment. Help us build safe models. You will use PyTorch and LangChain to implement RLHF pipelines. Strong Python skills necessary."
+  },
+  {
+    "id": "job_003",
+    "company": "Databricks",
+    "source_url": "https://databricks.com/careers/1",
+    "raw_text": "Data Governance Lead. We are building new tools for AI compliance. You will work closely with legal and engineering to build automated scanning tools. Experience with enterprise risk management and SQL."
+  },
+  {
+    "id": "news_001",
+    "company": "Databricks",
+    "source_url": "https://techcrunch.com/databricks-ai",
+    "raw_text": "PRESS RELEASE: Databricks announces new expansion of their AI platform team, signaling a massive push into model serving and enterprise AI compliance tools for the upcoming fiscal year."
+  },
+  {
+    "id": "job_004",
+    "company": "NVIDIA",
+    "source_url": "https://nvidia.com/careers/1",
+    "raw_text": "Staff Software Engineer, Distributed Training. We are pushing the limits of GPU clusters. You need deep expertise in NCCL, PyTorch, and distributed systems architecture."
+  },
+  {
+    "id": "job_005",
+    "company": "OpenAI",
+    "source_url": "https://openai.com/careers/1",
+    "raw_text": "Product Manager, Agentic Systems. We are launching a new division focused on autonomous agents. You will define the roadmap for multi-agent workflows. Experience shipping enterprise SaaS."
+  },
+  {
+    "id": "job_006",
+    "company": "OpenAI",
+    "source_url": "https://openai.com/careers/2",
+    "raw_text": "AI Engineer, Internal Tools. Help us build the infrastructure that powers our research. Strong Python, React, and SQL required."
+  },
+  {
+    "id": "job_007",
+    "company": "Snowflake",
+    "source_url": "https://snowflake.com/careers/1",
+    "raw_text": "Senior Data Engineer, AI Products. Snowflake is building LLM capabilities directly into the data cloud. You will build data pipelines using Python and SQL to support RAG applications."
+  }
+]
