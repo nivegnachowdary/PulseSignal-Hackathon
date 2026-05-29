@@ -188,8 +188,8 @@ else:
     # 2. Embed and Store (Cached so it doesn't re-embed on every keypress)
     @st.cache_resource
     def create_vector_store(_docs, key):
-        # Updated to the current standard Gemini embedding model
-        embeddings = GoogleGenerativeAIEmbeddings(model="models/text-embedding-004", google_api_key=key)
+        # Updated to the current standard Gemini embedding model available in your account
+        embeddings = GoogleGenerativeAIEmbeddings(model="models/gemini-embedding-2", google_api_key=key)
         return FAISS.from_texts(_docs, embedding=embeddings)
 
     vector_store = create_vector_store(documents, api_key)
