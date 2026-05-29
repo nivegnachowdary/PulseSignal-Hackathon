@@ -109,7 +109,7 @@ if not api_key:
 else:
     # Initialize LLM with the conversion flag added
     llm = ChatGoogleGenerativeAI(
-        model="gemini-1.5-flash", 
+        model="models/gemini-flash-latest", 
         google_api_key=api_key, 
         convert_system_message_to_human=True
     )
