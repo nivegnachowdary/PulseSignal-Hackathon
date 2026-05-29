@@ -16,7 +16,7 @@ if not api_key:
 genai.configure(api_key=api_key)
 
 # We use Gemini 1.5 Flash because it is incredibly fast and perfect for text extraction
-model = genai.GenerativeModel('gemini-2.0-flash')
+model = genai.GenerativeModel('gemini-flash-latest')
 
 
 def get_unprocessed_data(conn):
