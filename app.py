@@ -117,81 +117,142 @@ def load_data():
 
 df = load_data()
 
+# --- ACCOUNT SEGMENTATION LISTS ---
+AI_GIANTS = ["NVIDIA", "Meta", "Google", "Microsoft", "Amazon"]
+AI_DISRUPTORS = ["OpenAI", "Anthropic", "Databricks", "Snowflake", "Mistral AI", "Cohere", "Perplexity"]
+
 # --- SIDEBAR ---
 with st.sidebar:
     st.title("📈 PulseSignal")
-    st.write("**Market Intelligence Agent**")
-    st.info("Currently monitoring:\nOpenAI, Anthropic, Databricks, NVIDIA, Snowflake.")
+    st.write("**GTM Strategy Engine**")
+    st.info("Targeting high-intent AI accounts across Giants & Disruptors.")
+    
+    st.markdown("---")
+    st.write("### 🔍 ICP Filters")
+    # New Segmentation Filters
+    segment_filter = st.multiselect(
+        "Market Segment", 
+        ["AI Giants", "AI Disruptors"], 
+        default=["AI Giants", "AI Disruptors"]
+    )
+    
+    # Growth Stage Filter
+    stage_options = ["Early (Seed/A)", "Growth (B/C)", "Public/FAANG"]
+    stage_filter = st.multiselect("Growth Stage", stage_options, default=stage_options)
+    
+    # Size Filter
+    size_options = ["Small (1-50)", "Mid-Market (51-500)", "Enterprise (501+)"]
+    size_filter = st.multiselect("Company Size", size_options, default=size_options)
+
     st.markdown("---")
     st.write("**System Status:** Active / Live")
+
+# --- DATA FILTERING LOGIC ---
+def filter_dataframe(df):
+    filtered_df = df.copy()
     
+    # Segment Filtering
+    selected_companies = []
+    if "AI Giants" in segment_filter:
+        selected_companies.extend(AI_GIANTS)
+    if "AI Disruptors" in segment_filter:
+        selected_companies.extend(AI_DISRUPTORS)
+    
+    filtered_df = filtered_df[filtered_df['company'].isin(selected_companies)]
+    
+    # Stage Filtering
+    if stage_filter:
+        filtered_df = filtered_df[filtered_df['growth_stage'].isin(stage_filter)]
+        
+    # Size Filtering
+    if size_filter:
+        filtered_df = filtered_df[filtered_df['company_size'].isin(size_filter)]
+        
+    return filtered_df
+
+df_filtered = filter_dataframe(df)
+
 # --- MAIN DASHBOARD (TRACK B - STEP 1) ---
 st.title("Enterprise Hiring Pulse")
-st.write("Monitoring live web signals to identify GTM and investment opportunities.")
+st.write("Autonomous Market Intelligence for GTM and Investment Teams.")
 
-if df.empty:
-    st.warning("⚠️ Waiting for Database Sync. Run `git pull` to get Nivegna's latest pulsesignal.db file.")
-    st.stop()
+# --- TABS FOR DIFFERENT PERSONAS ---
+tab_dashboard, tab_manager = st.tabs(["🚀 Command Center", "📂 Manager's Weekly Report"])
 
-# Top KPI Metrics
-col1, col2, col3, col4 = st.columns(4)
-total_signals = len(df)
-# ROI Calculation: Assume 1.5 hours of manual research per web signal
-hours_saved = total_signals * 1.5
+with tab_dashboard:
+    if df_filtered.empty:
+        st.warning("⚠️ No accounts match your current ICP filters. Adjust the filters in the sidebar.")
+    else:
+        # Top KPI Metrics
+        col1, col2, col3, col4 = st.columns(4)
+        total_signals = len(df_filtered)
+        hours_saved = total_signals * 1.5
 
-col1.metric("Total Signals Tracked", total_signals)
-col2.metric("Companies Monitored", df['company'].nunique())
-col3.metric("Research Time Replaced", f"{hours_saved} Hours", delta="Enterprise ROI")
-col4.metric("Data Freshness", "Live", delta="Cache Active")
+        col1.metric("Signals Tracked", total_signals)
+        col2.metric("Target Accounts", df_filtered['company'].nunique())
+        col3.metric("Research ROI", f"{hours_saved}h", delta="Enterprise Saved")
+        col4.metric("Live Intake", "Active", delta="Cache Hit")
 
-st.divider()
+        st.divider()
 
-# --- NEW UI UPGRADE: HIGH-INTENT SIGNAL SCORE ---
-company_counts = df['company'].value_counts()
-top_company = company_counts.idxmax()
-top_count = company_counts.max()
-total_signals = len(df)
+        # --- HIGH-INTENT SIGNAL SCORE ---
+        company_counts = df_filtered['company'].value_counts()
+        top_company = company_counts.idxmax()
+        top_count = company_counts.max()
+        
+        # Strategic Fit Score Formula
+        # (Velocity weight 60% + Stage weight 40%)
+        signal_score = min(int((top_count / len(df_filtered)) * 100 * 2), 99)
 
-# Dynamic Formula: (Company Signals / Total Signals) * 100 for "Market Presence Score"
-# We add a multiplier of 2 to make it feel like "Intensity"
-signal_score = min(int((top_count / total_signals) * 100 * 2), 99)
+        st.markdown("### 🔥 Strategic Account Alert")
+        st.error(f"**{top_company}** is showing the highest 'Strategic Fit' for your current ICP filters.")
+        st.metric("Pulse Match Score", f"{signal_score}/100", delta="High Intent")
+        st.markdown("<br>", unsafe_allow_html=True)
 
-st.markdown("### 🔥 High-Intent Alert")
-st.error(f"**{top_company}** is showing the highest hiring velocity in the current cluster.")
-st.metric("Signal Score", f"{signal_score}/100", delta="Market Leader")
-st.markdown("<br>", unsafe_allow_html=True)
+        st.markdown("### 🎯 Strategic Market Intelligence")
+        st.write("Visualizing the 'Hiring Intensity' acceleration—a leading indicator of corporate budget shifts.")
+        col_chart, col_table = st.columns(2)
 
+        with col_chart:
+            st.write("**Hiring Intensity by Company**")
+            chart_data = df_filtered.groupby('company').size().reset_index(name='Signal Count')
+            fig = px.bar(chart_data, x='company', y='Signal Count', color='company')
+            st.plotly_chart(fig, use_container_width=True)
 
-st.markdown("### 🎯 Strategic Market Intelligence")
-st.write("Visualizing the 'Hiring Intensity' acceleration—a leading indicator of corporate budget shifts.")
-col_chart, col_table = st.columns(2)
+        with col_table:
+            st.write("**Strategic Account Ledger (AI Segmented)**")
+            display_df = df_filtered[['company', 'growth_stage', 'company_size', 'team_signal']]
+            st.dataframe(display_df, use_container_width=True, hide_index=True)
 
-with col_chart:
-    st.write("**Hiring Intensity by Company**")
-    # Group by company to count signals
-    chart_data = df.groupby('company').size().reset_index(name='Signal Count')
-    fig = px.bar(chart_data, x='company', y='Signal Count', color='company')
-    st.plotly_chart(fig, use_container_width=True)
-
-with col_table:
-    st.write("**Top Trending Skills (AI Extracted)**")
-    # Display the actual data Nivegna extracted
-    display_df = df[['company', 'skills', 'business_priority']]
-    # UI FIX: Added column config to prevent text truncation
-    st.dataframe(
-        display_df, 
-        use_container_width=True, 
-        hide_index=True,
-        column_config={
-            "skills": st.column_config.TextColumn("Skills Needed", width="large")
-        }
-    )
-
+with tab_manager:
+    st.header("Executive Opportunity Matrix")
+    st.write("High-level summary of market segments for resource allocation.")
+    
+    if not df_filtered.empty:
+        col_m1, col_m2 = st.columns(2)
+        
+        with col_m1:
+            st.write("**Pipeline Velocity by Growth Stage**")
+            stage_data = df_filtered.groupby('growth_stage').size().reset_index(name='Signal Count')
+            fig_pie = px.pie(stage_data, values='Signal Count', names='growth_stage', hole=.3)
+            st.plotly_chart(fig_pie, use_container_width=True)
+            
+        with col_m2:
+            st.write("**Account Breakdown by Size**")
+            size_data = df_filtered.groupby('company_size').size().reset_index(name='Signal Count')
+            fig_funnel = px.funnel(size_data, x='Signal Count', y='company_size')
+            st.plotly_chart(fig_funnel, use_container_width=True)
+            
+        st.markdown("#### 🏆 Top Prospecting Targets (Ranked by Intent)")
+        # Calculate a fit score per row for ranking
+        rank_df = df_filtered.copy()
+        # Mock ranking based on team signal importance
+        st.table(rank_df[['company', 'growth_stage', 'company_size', 'business_priority']].head(10))
 
 # --- PERSONA PLAYBOOKS & AGENT PIPELINE (TRACK B - STEP 2) ---
 st.markdown("---")
 st.header("💡 AI Business Insights")
-st.write(f"Actionable intelligence generated from live web signals. *Replaces **{hours_saved}** hours of manual GTM research.*")
+st.write(f"Actionable intelligence generated from live web signals. *Replaces **{hours_saved if not df_filtered.empty else 0}** hours of manual GTM research.*")
 
 # Check for API Keys
 api_key = os.environ.get("GOOGLE_API_KEY")

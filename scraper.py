@@ -11,7 +11,10 @@ load_dotenv()
 API_KEY = os.getenv("BRIGHTDATA_API_KEY")
 ZONE = os.getenv("BRIGHTDATA_ZONE", "pulsesignal_serp")
 
-TARGET_COMPANIES = ["Anthropic", "Databricks", "NVIDIA", "OpenAI", "Snowflake"]
+TARGET_COMPANIES = [
+    "NVIDIA", "Meta", "Google", "Microsoft", "Amazon", # AI Giants
+    "OpenAI", "Anthropic", "Databricks", "Snowflake", "Mistral AI", "Cohere", "Perplexity" # AI Disruptors
+]
 
 def fetch_live_signals(company):
     query = f"{company} careers AI machine learning infrastructure jobs"

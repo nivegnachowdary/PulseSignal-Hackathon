@@ -71,7 +71,9 @@ def ask_gemini_to_extract(text):
       "skills": ["list", "of", "technical", "skills", "found"],
       "seniority": "Entry, Mid, Senior, Lead, or Unknown",
       "team_signal": "A short 3-word summary of what team is growing",
-      "business_priority": "A 1-sentence prediction of what project this company is focusing on based on this text"
+      "business_priority": "A 1-sentence prediction of what project this company is focusing on based on this text",
+      "company_size": "Small (1-50), Mid-Market (51-500), or Enterprise (501+)",
+      "growth_stage": "Early (Seed/A), Growth (B/C), or Public/FAANG"
     }}
     
     Text to analyze:
@@ -96,7 +98,9 @@ def ask_gemini_to_extract(text):
         "skills": extract_skills_fallback(text),
         "seniority": extract_seniority_fallback(text),
         "team_signal": "AI infrastructure growth",
-        "business_priority": "Company is likely expanding AI infrastructure and related enterprise capabilities."
+        "business_priority": "Company is likely expanding AI infrastructure and related enterprise capabilities.",
+        "company_size": "Enterprise (501+)",
+        "growth_stage": "Public/FAANG"
     }
 
 def process_database():
@@ -123,15 +127,17 @@ def process_database():
             skills_string = ", ".join(extracted_data.get("skills", []))
             
             cursor.execute('''
-                INSERT OR REPLACE INTO structured_signals (id, company, skills, seniority, team_signal, business_priority)
-                VALUES (?, ?, ?, ?, ?, ?)
+                INSERT OR REPLACE INTO structured_signals (id, company, skills, seniority, team_signal, business_priority, company_size, growth_stage)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             ''', (
                 record_id, 
                 company, 
                 skills_string,
                 extracted_data.get("seniority", "Unknown"),
                 extracted_data.get("team_signal", "Unknown"),
-                extracted_data.get("business_priority", "Unknown")
+                extracted_data.get("business_priority", "Unknown"),
+                extracted_data.get("company_size", "Unknown"),
+                extracted_data.get("growth_stage", "Unknown")
             ))
             
             # 2. Update the raw_cache table to mark this record as done (status = 1)
