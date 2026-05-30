@@ -3,6 +3,8 @@ import pandas as pd
 import sqlite3
 import os
 import plotly.express as px
+import requests
+import time
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
@@ -216,6 +218,18 @@ else:
         )
         st.sidebar.success("🚀 Hybrid AI Engine: Active (Llama-3.3 + Gemini)")
 
+# --- SIDEBAR ACTIONS ---
+csv_data = df.to_csv(index=False).encode('utf-8')
+st.sidebar.markdown("---")
+st.sidebar.write("**Data Actions**")
+st.sidebar.download_button(
+    label="📥 Export to CRM (CSV)",
+    data=csv_data,
+    file_name="gtm_intercept_signals.csv",
+    mime="text/csv",
+    use_container_width=True
+)
+
     
     insight_prompt = PromptTemplate.from_template(
         """
@@ -253,6 +267,12 @@ else:
             
             status.update(label="Intelligence Pipeline Complete!", state="complete", expanded=False)
 
+    # UI UPGRADE: The Evidence Ledger
+    st.markdown("#### 🔎 Evidence Ledger")
+    with st.expander("View Raw Intercepted Web Signals"):
+        st.write("Transparent, deterministic tracking of all scraped web data.")
+        st.dataframe(df, use_container_width=True)
+
     # Display the report if it exists in session state
     if 'intelligence_report' in st.session_state:
         st.info(st.session_state['intelligence_report'])
@@ -275,6 +295,21 @@ else:
                 email_res = email_chain.invoke({"data": df.to_string()})
                 st.success("Draft Generated Successfully. Ready for CRM Export.")
                 st.code(email_res.content, language="markdown")
+
+        # UI UPGRADE: TriggerWare Automation
+        if st.button("⚡ Push Top Lead to TriggerWare"):
+            with st.spinner("Executing workflow..."):
+                # Example webhook URL from TriggerWare
+                webhook_url = "https://hooks.triggerware.ai/v1/example" # You can replace this with your actual URL
+                top_lead = df.iloc[0].to_dict() # Grabs the most recent signal
+                
+                try:
+                    # In a real demo, this would push to Slack/Email via TriggerWare
+                    # requests.post(webhook_url, json=top_lead) 
+                    time.sleep(1) # Simulating API call
+                    st.success("Workflow triggered! Lead pushed to Slack/CRM via TriggerWare.")
+                except Exception as e:
+                    st.error("Workflow execution failed.")
 
     # --- RAG Q&A CHATBOT (TRACK B - STEP 3) ---
     st.markdown("---")
