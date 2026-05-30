@@ -218,19 +218,18 @@ else:
         )
         st.sidebar.success("🚀 Hybrid AI Engine: Active (Llama-3.3 + Gemini)")
 
-# --- SIDEBAR ACTIONS ---
-csv_data = df.to_csv(index=False).encode('utf-8')
-st.sidebar.markdown("---")
-st.sidebar.write("**Data Actions**")
-st.sidebar.download_button(
-    label="📥 Export to CRM (CSV)",
-    data=csv_data,
-    file_name="gtm_intercept_signals.csv",
-    mime="text/csv",
-    use_container_width=True
-)
+    # --- SIDEBAR ACTIONS ---
+    csv_data = df.to_csv(index=False).encode('utf-8')
+    st.sidebar.markdown("---")
+    st.sidebar.write("**Data Actions**")
+    st.sidebar.download_button(
+        label="📥 Export to CRM (CSV)",
+        data=csv_data,
+        file_name="gtm_intercept_signals.csv",
+        mime="text/csv",
+        use_container_width=True
+    )
 
-    
     insight_prompt = PromptTemplate.from_template(
         """
         You are an elite Go-To-Market Market Intelligence Analyst. 
