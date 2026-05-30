@@ -100,7 +100,7 @@ with col_table:
 # --- PERSONA PLAYBOOKS & AGENT PIPELINE (TRACK B - STEP 2) ---
 st.markdown("---")
 st.header("💡 AI Business Insights")
-st.write("Actionable intelligence generated from live web signals. *Replaces 12+ hours of manual GTM research.*")
+st.write(f"Actionable intelligence generated from live web signals. *Replaces **{hours_saved}** hours of manual GTM research.*")
 
 # Check for API Keys
 api_key = os.environ.get("GOOGLE_API_KEY")
