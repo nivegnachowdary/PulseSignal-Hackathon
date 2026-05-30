@@ -18,6 +18,89 @@ from langchain.chains import RetrievalQA
 # --- PAGE CONFIG ---
 st.set_page_config(page_title="PulseSignal | Market Intelligence", page_icon="📈", layout="wide")
 
+# --- THE SAAS ILLUSION (CUSTOM CSS INJECTION) ---
+st.markdown("""
+<style>
+    /* Import modern SaaS Font */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+
+    html, body, [class*="css"] {
+        font-family: 'Inter', sans-serif;
+    }
+
+    /* Hide Streamlit Branding & Header */
+    #MainMenu {visibility: hidden;}
+    header {visibility: hidden;}
+    footer {visibility: hidden;}
+    
+    /* Global App Background */
+    .stApp {
+        background-color: #0B0F19;
+    }
+
+    /* Sleek Sidebar */
+    [data-testid="stSidebar"] {
+        background-color: #111827;
+        border-right: 1px solid #1F2937;
+    }
+
+    /* Premium Metric Cards (The "Next.js" look) */
+    [data-testid="stMetric"] {
+        background-color: #1F2937;
+        border: 1px solid #374151;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    
+    /* Hover effect for Metric Cards */
+    [data-testid="stMetric"]:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+        border-color: #00e676;
+    }
+
+    /* Primary Button Styling (Gradient SaaS Button) */
+    .stButton>button {
+        background: linear-gradient(135deg, #00e676 0%, #00b0ff 100%);
+        color: white;
+        font-weight: 600;
+        border: none;
+        border-radius: 8px;
+        padding: 0.5rem 1rem;
+        transition: all 0.3s ease;
+        width: 100%;
+    }
+    
+    .stButton>button:hover {
+        transform: scale(1.02);
+        box-shadow: 0 0 15px rgba(0, 230, 118, 0.4);
+        color: white;
+    }
+
+    /* Chat Input Styling */
+    [data-testid="stChatInput"] {
+        border-radius: 12px;
+        border: 1px solid #374151;
+        background-color: #1F2937;
+    }
+
+    /* Dataframe Header Styling */
+    th {
+        background-color: #111827 !important;
+        color: #9CA3AF !important;
+        font-weight: 600 !important;
+    }
+    
+    /* Alerts & Status Boxes */
+    .stAlert {
+        border-radius: 8px;
+        border: none;
+    }
+</style>
+""", unsafe_allow_html=True)
+
 # --- DATABASE CONNECTION ---
 @st.cache_data
 def load_data():
