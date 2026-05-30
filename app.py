@@ -10,6 +10,7 @@ load_dotenv()
 
 # LangChain & Gemini Imports
 from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings
+from langchain_openai import ChatOpenAI
 from langchain_core.prompts import PromptTemplate
 from langchain_community.vectorstores import FAISS
 from langchain.chains import RetrievalQA
@@ -101,18 +102,31 @@ st.markdown("---")
 st.header("💡 AI Business Insights")
 st.write("Actionable intelligence generated from live web signals. *Replaces 12+ hours of manual GTM research.*")
 
-# Check for API Key
+# Check for API Keys
 api_key = os.environ.get("GOOGLE_API_KEY")
+aiml_api_key = os.environ.get("AIML_API_KEY")
 
 if not api_key:
     st.error("🔑 GOOGLE_API_KEY environment variable is not set. Please set it in your terminal to use AI features.")
 else:
-    # Initialize LLM with the conversion flag added
-    llm = ChatGoogleGenerativeAI(
-        model="models/gemini-flash-latest", 
-        google_api_key=api_key, 
-        convert_system_message_to_human=True
-    )
+    if not aiml_api_key:
+        st.warning("⚠️ AIML_API_KEY not found. Using Gemini for intelligence (Bounty requirement missing).")
+        # Fallback to Gemini
+        llm = ChatGoogleGenerativeAI(
+            model="models/gemini-2.0-flash", 
+            google_api_key=api_key, 
+            convert_system_message_to_human=True
+        )
+    else:
+        # SUCCESS: Initialize Hybrid Multi-Model Architecture
+        # Using Llama-3.3 70B via AI/ML API for high-reasoning market intelligence
+        llm = ChatOpenAI(
+            api_key=aiml_api_key, 
+            base_url="https://api.aimlapi.com/v1", 
+            model="meta-llama/Llama-3.3-70B-Instruct-Turbo" 
+        )
+        st.sidebar.success("🚀 Hybrid AI Engine: Active (Llama-3.3 + Gemini)")
+
     
     insight_prompt = PromptTemplate.from_template(
         """
