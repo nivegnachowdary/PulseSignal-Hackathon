@@ -77,12 +77,13 @@ col_score, col_math = st.columns([2, 1])
 with col_score:
     st.metric("Signal Score", f"{signal_score}/100", delta="Market Leader")
 with col_math:
-    st.help(f"""
+    methodology = f"""
     **Methodology:**
     Score = ( {top_count} signals / {total_signals} total ) * 200
     
     This represents the 'Market Lead Intensity'—how aggressively one company is out-hiring its peers in the monitored cluster.
-    """)
+    """
+    st.help(methodology)
 st.markdown("<br>", unsafe_allow_html=True)
 
 
