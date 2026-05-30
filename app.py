@@ -210,7 +210,24 @@ else:
     retriever = vector_store.as_retriever(search_kwargs={"k": 3})
 
     # 3. Chat Interface Setup
-    qa_chain = RetrievalQA.from_chain_type(llm=llm, retriever=retriever)
+    # Updated prompt to provide technical context for AI-specific terms like RAG
+    template = """
+    You are an elite Go-To-Market Market Intelligence Analyst.
+    Use the following pieces of context to answer the user's question. 
+    Note: In this technical context, 'RAG' refers to Retrieval-Augmented Generation (AI/LLM infrastructure).
+    
+    Context: {context}
+    Question: {question}
+    
+    Answer:
+    """
+    qa_prompt = PromptTemplate.from_template(template)
+    qa_chain = RetrievalQA.from_chain_type(
+        llm=llm, 
+        chain_type="stuff", 
+        retriever=retriever,
+        chain_type_kwargs={"prompt": qa_prompt}
+    )
 
     # Initialize chat history in session state
     if "messages" not in st.session_state:
