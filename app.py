@@ -121,6 +121,22 @@ df = load_data()
 AI_GIANTS = ["NVIDIA", "Meta", "Google", "Microsoft", "Amazon"]
 AI_DISRUPTORS = ["OpenAI", "Anthropic", "Databricks", "Snowflake", "Mistral AI", "Cohere", "Perplexity"]
 
+# --- MASTER ACCOUNT REGISTRY (Data Integrity Layer) ---
+COMPANY_METADATA = {
+    "NVIDIA": {"stage": "Public/FAANG", "size": "Enterprise (501+)"},
+    "Meta": {"stage": "Public/FAANG", "size": "Enterprise (501+)"},
+    "Google": {"stage": "Public/FAANG", "size": "Enterprise (501+)"},
+    "Microsoft": {"stage": "Public/FAANG", "size": "Enterprise (501+)"},
+    "Amazon": {"stage": "Public/FAANG", "size": "Enterprise (501+)"},
+    "OpenAI": {"stage": "Growth (B/C)", "size": "Enterprise (501+)"},
+    "Anthropic": {"stage": "Growth (B/C)", "size": "Mid-Market (51-500)"},
+    "Databricks": {"stage": "Growth (B/C)", "size": "Enterprise (501+)"},
+    "Snowflake": {"stage": "Public/FAANG", "size": "Enterprise (501+)"},
+    "Mistral AI": {"stage": "Growth (B/C)", "size": "Mid-Market (51-500)"},
+    "Cohere": {"stage": "Growth (B/C)", "size": "Mid-Market (51-500)"},
+    "Perplexity": {"stage": "Growth (B/C)", "size": "Small (1-50)"}
+}
+
 # --- SIDEBAR ---
 with st.sidebar:
     st.title("📈 PulseSignal")
@@ -151,6 +167,11 @@ with st.sidebar:
 def filter_dataframe(df):
     filtered_df = df.copy()
     
+    # MASTER DATA OVERRIDE: Ensure consistency regardless of database noise
+    for company, meta in COMPANY_METADATA.items():
+        filtered_df.loc[filtered_df['company'] == company, 'growth_stage'] = meta['stage']
+        filtered_df.loc[filtered_df['company'] == company, 'company_size'] = meta['size']
+
     # Segment Filtering
     selected_companies = []
     if "AI Giants" in segment_filter:
