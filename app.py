@@ -138,6 +138,13 @@ COMPANY_METADATA = {
     "Perplexity": {"stage": "Growth (B/C)", "size": "Enterprise (501+)"}
 }
 
+# --- GLOBAL DATA INTEGRITY OVERRIDE ---
+# This ensures even the raw Evidence Ledger is consistent
+if not df.empty:
+    for company, meta in COMPANY_METADATA.items():
+        df.loc[df['company'] == company, 'growth_stage'] = meta['stage']
+        df.loc[df['company'] == company, 'company_size'] = meta['size']
+
 # --- SIDEBAR ---
 with st.sidebar:
     st.title("📈 PulseSignal")
@@ -168,11 +175,6 @@ with st.sidebar:
 def filter_dataframe(df):
     filtered_df = df.copy()
     
-    # MASTER DATA OVERRIDE: Ensure consistency regardless of database noise
-    for company, meta in COMPANY_METADATA.items():
-        filtered_df.loc[filtered_df['company'] == company, 'growth_stage'] = meta['stage']
-        filtered_df.loc[filtered_df['company'] == company, 'company_size'] = meta['size']
-
     # Segment Filtering
     selected_companies = []
     if "AI Giants" in segment_filter:
