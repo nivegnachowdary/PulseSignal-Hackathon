@@ -62,12 +62,27 @@ col4.metric("Data Freshness", "Live", delta="Cache Active")
 st.divider()
 
 # --- NEW UI UPGRADE: HIGH-INTENT SIGNAL SCORE ---
-top_company = df['company'].value_counts().idxmax()
-top_company_count = df['company'].value_counts().max()
-signal_score = min(top_company_count * 15, 99) # Cap at 99 for realism
+company_counts = df['company'].value_counts()
+top_company = company_counts.idxmax()
+top_count = company_counts.max()
+total_signals = len(df)
+
+# Dynamic Formula: (Company Signals / Total Signals) * 100 for "Market Presence Score"
+# We add a multiplier of 2 to make it feel like "Intensity"
+signal_score = min(int((top_count / total_signals) * 100 * 2), 99)
 
 st.markdown("### 🔥 High-Intent Alert")
-st.error(f"**{top_company}** is showing severe hiring velocity (Signal Score: {signal_score}/100). Immediate GTM action recommended.")
+st.error(f"**{top_company}** is showing the highest hiring velocity in the current cluster.")
+col_score, col_math = st.columns([2, 1])
+with col_score:
+    st.metric("Signal Score", f"{signal_score}/100", delta="Market Leader")
+with col_math:
+    st.help(f"""
+    **Methodology:**
+    Score = ( {top_count} signals / {total_signals} total ) * 200
+    
+    This represents the 'Market Lead Intensity'—how aggressively one company is out-hiring its peers in the monitored cluster.
+    """)
 st.markdown("<br>", unsafe_allow_html=True)
 
 
